@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Student OS - CS Project v1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Menu Bar -->
+  <div id="topbar">
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button class="topbtn" onclick="alert('StudentOS v1.0\nMade by Priyanshu for CS Class')">[OS]</button>
+      <b>StudentOS</b>
+      <span class="navlink" onclick="alert('Not implemented')">File</span>
+      <span class="navlink" onclick="alert('Not implemented')">Edit</span>
+      <span class="navlink" onclick="alert('Not implemented')">Help</span>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center;">
+      <span>WiFi: OK</span>
+      <span>BAT: 99%</span>
+      <span id="clockBox" style="background:#222; border:1px solid #666; padding:1px 5px; font-family:Courier New,monospace;">12:00:00</span>
+    </div>
+  </div>
+
+  <!-- Desktop Workspace -->
+  <div id="desktop">
+
+    <!-- Project Label / Watermark -->
+    <div id="watermark">
+      <b>CS101 Final Term Project</b><br>
+      Name: Priyanshu (Roll 42)<br>
+      Status: Draft / Incomplete
+    </div>
+
+    <!-- Right Side Widgets -->
+    <div id="sidebar">
+
+      <fieldset class="widgetbox">
+        <legend>TODAY'S CLASSES</legend>
+        <div class="row c-blue">CS201 Data Structures (9:00 - 10:30) Hall 3</div>
+        <div class="row c-purple">MATH220 Lin. Algebra (11:00 - 12:30) Hall 1</div>
+        <div class="row c-orange">PHYS102 Physics Lab (2:00 - 4:00) Lab B</div>
+      </fieldset>
+
+      <fieldset class="widgetbox" style="background:#ffffcc; color:#000;">
+        <legend style="color:#000; font-weight:bold;">STICKY MEMO</legend>
+        <textarea id="memo" placeholder="type homework reminder here..."></textarea>
+      </fieldset>
+
+      <fieldset class="widgetbox">
+        <legend>FOCUS TIMER</legend>
+        <div id="timerDisplay">25:00</div>
+        <div style="text-align:center; margin-top:5px;">
+          <button class="smallbtn" onclick="toggleTimer()">START / STOP</button>
+          <button class="smallbtn" onclick="resetTimer()">RESET</button>
+        </div>
+      </fieldset>
+
+    </div>
+
+    <!-- WINDOWS (Pre-made in HTML, toggled by display:none/block) -->
+
+    <!-- Notes Window -->
+    <div id="win_notes" class="window" style="top:40px; left:50px; width:480px; height:320px;">
+      <div class="winheader" onmousedown="dragStart(event, 'win_notes')">
+        <span>[ Notes App ]</span>
+        <button class="winbtn" onclick="closeWin('win_notes')">[X]</button>
+      </div>
+      <div class="winbody">
+        <div style="margin-bottom:6px;">
+          <button class="smallbtn" onclick="newNote()">+ New Note</button>
+          <span style="font-size:11px; color:#888;">(Auto-saved)</span>
+        </div>
+        <input type="text" id="noteTitle" placeholder="Title of note..." style="width:100%; margin-bottom:5px; padding:3px; background:#222; color:#fff; border:1px solid #555;">
+        <textarea id="noteContent" placeholder="Write lecture notes here..." style="width:100%; height:200px; padding:4px; background:#111; color:#00ff00; font-family:Courier New,monospace; border:1px solid #555;"></textarea>
+      </div>
+    </div>
+
+    <!-- Planner Window -->
+    <div id="win_planner" class="window" style="top:60px; left:100px; width:520px; height:360px; display:block;">
+      <div class="winheader" onmousedown="dragStart(event, 'win_planner')">
+        <span>[ Academic Planner &amp; Schedule ]</span>
+        <button class="winbtn" onclick="closeWin('win_planner')">[X]</button>
+      </div>
+      <div class="winbody">
+        <h4 style="margin-bottom:4px;">Semester 1 Schedule</h4>
+        <table border="1" cellpadding="4" style="width:100%; border-collapse:collapse; font-size:12px; background:#111;">
+          <tr style="background:#333; color:#00ffff;">
+            <th>Day</th><th>Course</th><th>Time</th><th>Room</th>
+          </tr>
+          <tr><td>Mon</td><td>CS201 Data Structures</td><td>09:00</td><td>Turing 302</td></tr>
+          <tr><td>Mon</td><td>MATH220 Lin. Algebra</td><td>11:00</td><td>Euler 105</td></tr>
+          <tr><td>Tue</td><td>PHYS102 Physics Lab</td><td>14:00</td><td>Curie Lab B</td></tr>
+          <tr><td>Wed</td><td>CS201 Workshop</td><td>10:00</td><td>Lab 2</td></tr>
+          <tr><td>Thu</td><td>BIO101 Biology</td><td>13:00</td><td>Hall 4</td></tr>
+        </table>
+        
+        <h4 style="margin:10px 0 4px 0;">Homework Check-List:</h4>
+        <div style="font-size:12px; line-height:1.6;">
+          <label><input type="checkbox"> Finish C++ Red-Black Tree homework</label><br>
+          <label><input type="checkbox"> Math problem set 4 (Eigenvalues)</label><br>
+          <label><input type="checkbox" checked> Physics experiment writeup</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculator Window -->
+    <div id="win_calc" class="window" style="top:80px; left:150px; width:240px; height:300px;">
+      <div class="winheader" onmousedown="dragStart(event, 'win_calc')">
+        <span>[ Calculator ]</span>
+        <button class="winbtn" onclick="closeWin('win_calc')">[X]</button>
+      </div>
+      <div class="winbody" style="text-align:center;">
+        <input type="text" id="calcScr" value="0" readonly style="width:100%; font-size:20px; text-align:right; margin-bottom:8px; background:#000; color:#00ff00; font-family:Courier New,monospace; border:2px solid #555; padding:4px;">
+        <div class="calcgrid">
+          <button onclick="cPress('C')">C</button>
+          <button onclick="cPress('/')">/</button>
+          <button onclick="cPress('*')">*</button>
+          <button onclick="cPress('-')">-</button>
+          <button onclick="cPress('7')">7</button>
+          <button onclick="cPress('8')">8</button>
+          <button onclick="cPress('9')">9</button>
+          <button onclick="cPress('+')">+</button>
+          <button onclick="cPress('4')">4</button>
+          <button onclick="cPress('5')">5</button>
+          <button onclick="cPress('6')">6</button>
+          <button onclick="cPress('=')">=</button>
+          <button onclick="cPress('1')">1</button>
+          <button onclick="cPress('2')">2</button>
+          <button onclick="cPress('3')">3</button>
+          <button onclick="cPress('0')">0</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminal Window -->
+    <div id="win_term" class="window" style="top:110px; left:180px; width:460px; height:270px;">
+      <div class="winheader" onmousedown="dragStart(event, 'win_term')">
+        <span>[ Terminal CLI ]</span>
+        <button class="winbtn" onclick="closeWin('win_term')">[X]</button>
+      </div>
+      <div class="winbody" style="background:#000; color:#00ff00; font-family:Courier New,monospace; font-size:12px; display:flex; flex-direction:column;">
+        <div id="termLog" style="flex:1; overflow-y:auto;">
+          StudentOS Terminal v1.0<br>
+          Type 'help' for commands.<br><br>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <span>student@os:~$ &nbsp;</span>
+          <input type="text" id="termIn" style="flex:1; background:transparent; border:none; outline:none; color:#00ff00; font-family:inherit; font-size:12px;" onkeydown="if(event.key==='Enter') runCmd()" autofocus>
+          <span class="cursor-blink"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GPA Window -->
+    <div id="win_gpa" class="window" style="top:130px; left:210px; width:360px; height:280px;">
+      <div class="winheader" onmousedown="dragStart(event, 'win_gpa')">
+        <span>[ GPA Tracker ]</span>
+        <button class="winbtn" onclick="closeWin('win_gpa')">[X]</button>
+      </div>
+      <div class="winbody">
+        <div style="background:#222; border:1px solid #555; padding:8px; margin-bottom:8px; text-align:center;">
+          <div>Cumulative GPA:</div>
+          <div style="font-size:26px; font-weight:bold; color:#00ff00;">3.85 / 4.0</div>
+          <div style="font-size:10px; color:#aaa;">Status: Good Standing</div>
+        </div>
+        <table border="1" cellpadding="3" style="width:100%; border-collapse:collapse; font-size:11px;">
+          <tr style="background:#333;"><th>Course</th><th>Cr</th><th>Grade</th></tr>
+          <tr><td>CS201 Data Structures</td><td>4</td><td>A</td></tr>
+          <tr><td>MATH220 Lin. Algebra</td><td>4</td><td>A-</td></tr>
+          <tr><td>PHYS102 Physics Lab</td><td>4</td><td>B+</td></tr>
+          <tr><td>ENG101 English</td><td>3</td><td>A</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Settings Window -->
+    <div id="win_settings" class="window" style="top:90px; left:240px; width:340px; height:240px;">
+      <div class="winheader" onmousedown="dragStart(event, 'win_settings')">
+        <span>[ Settings ]</span>
+        <button class="winbtn" onclick="closeWin('win_settings')">[X]</button>
+      </div>
+      <div class="winbody">
+        <b>Wallpaper:</b><br>
+        <select id="wpSelect" onchange="changeBg(this.value)" style="width:100%; margin-top:4px; padding:3px; background:#222; color:#fff; border:1px solid #555;">
+          <option value="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600">Mountain</option>
+          <option value="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1600">Gradient</option>
+          <option value="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600">Neon</option>
+        </select>
+        <br><br>
+        <button class="smallbtn" onclick="location.reload()" style="background:#800; color:#fff;">Restart OS</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Taskbar / Dock -->
+  <div id="dock">
+    <button class="dockbtn" onclick="openWin('win_notes')">[Notes]</button>
+    <button class="dockbtn" onclick="openWin('win_planner')">[Planner]</button>
+    <button class="dockbtn" onclick="openWin('win_calc')">[Calc]</button>
+    <button class="dockbtn" onclick="openWin('win_term')">[Terminal]</button>
+    <button class="dockbtn" onclick="openWin('win_gpa')">[GPA]</button>
+    <button class="dockbtn" onclick="openWin('win_settings')">[Settings]</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
